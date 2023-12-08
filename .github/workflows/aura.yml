@@ -70,7 +70,9 @@ jobs:
   teardown:
     name: Teardown
     runs-on: ubuntu-latest
-    needs: setup
+    needs:
+      - setup
+      - tests
     steps:
       - uses: actions/checkout@v4
 
