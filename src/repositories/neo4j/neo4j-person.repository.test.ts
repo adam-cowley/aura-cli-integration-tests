@@ -9,8 +9,6 @@ describe('Neo4jPersonRepository', () => {
     beforeAll(async () => {
         config()
 
-
-
         driver = neo4j.driver(
             process.env.NEO4J_URI,
             neo4j.auth.basic(

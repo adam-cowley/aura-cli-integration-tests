@@ -72,13 +72,13 @@ jobs:
         with:
           node-version: "20.9.0"
       - name: Run Tests
+      - env:
+          NEO4J_URI: ${{ needs.setup.outputs.host }}
+          NEO4J_USERNAME: ${{ needs.setup.outputs.username }}
+          NEO4J_PASSWORD: needs.setup.outputs.password
         run: |
-          echo "${{ needs.setup.outputs.instanceid }}"
-          echo "${{ needs.setup.outputs.host }}"
-          echo "${{ needs.setup.outputs.username }}"
-          echo "${{ needs.setup.outputs.password }}"
-          echo "Running tests..."
-          echo "Tests completed..."
+          npm install --include=dev
+          npm run test
 
   teardown:
     name: Teardown
