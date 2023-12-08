@@ -35,12 +35,12 @@ jobs:
           echo "instanceid=$instanceid" >> $GITHUB_OUTPUT
 
       - name: Exists?
-        run: aura instances get --instance-id ${{ steps.create.outputs.instanceid }}}
+        run: aura instances get --instance-id ${{ steps.create.outputs.instanceid }}
 
       - name: Wait for instance
         run: >
           while true; do
-            dbstatus=$(aura instances get --instance-id ${{ steps.create.outputs.instanceid }}} | jq -r '.status')
+            dbstatus=$(aura instances get --instance-id ${{ steps.create.outputs.instanceid }} | jq -r '.status')
             if [ "$dbstatus" = "running" ]; then
                 echo "Status is running. Continuing..."
                 break
@@ -56,4 +56,4 @@ jobs:
           echo "Tests completed..."
 
       - name: Delete Instance
-        run: aura instances delete --instance-id ${{ steps.create.outputs.instanceid }}} --yes
+        run: aura instances delete --instance-id ${{ steps.create.outputs.instanceid }} --yes
