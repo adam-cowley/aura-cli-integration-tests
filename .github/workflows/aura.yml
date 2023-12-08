@@ -1,0 +1,44 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install Aura CLI
+        run: python -m pip install --upgrade aura-cli
+
+      - name: Apply Credentials
+        run: aura credentials add --name aura --client-id ${{ secrets.AURA_CLIENT_ID }} --client-secret ${{ secrets.AURA_CLIENT_SECRET }} --use
+
+      - name: Create Instance
+        run: >
+          aura instances create --name AuraIntegrationTests --region europe-west1 --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }}
+          while true; do
+            dbstatus=$(aura instances get --name AuraIntegrationTests | jq -r '.status')
+            if [ "$dbstatus" = "running" ]; then
+                echo "Status is running. Continuing..."
+                break
+            else
+                echo "Status is $status. Waiting..."
+                sleep 20
+            fi
+          done
+
+      - name: Run Tests
+        run: >
+          echo "Running tests..."
+          echo "Tests completed..."
+
+      - name: Delete Instance
+        run: aura instances delete --name $(aura instances get --name AuraIntegrationTests | jq -r '.id')
