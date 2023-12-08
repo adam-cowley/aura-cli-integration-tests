@@ -35,7 +35,7 @@ jobs:
         id: create
         run: |
           json_output=$(aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }})
-          instanceid=$(echo "$json_output" | jq -r '.instanceid')
+          instanceid=$(echo "$json_output" | jq -r '.id')
           host=$(echo "$json_output" | jq -r '.connection_url')
           username=$(echo "$json_output" | jq -r '.username')
           password=$(echo "$json_output" | jq -r '.password')
