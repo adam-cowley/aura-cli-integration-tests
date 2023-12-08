@@ -6,10 +6,13 @@ on:
 
 jobs:
   setup:
-    name: Integration Tests
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       instanceid: ${{ steps.create.outputs.instanceid }}
+      host: ${{ steps.create.outputs.host }}
+      username: ${{ steps.create.outputs.username }}
+      password: ${{ steps.create.outputs.password }}
 
     steps:
       - uses: actions/checkout@v4
@@ -31,9 +34,16 @@ jobs:
       - name: Create Instance
         id: create
         run: |
-          instanceid=$(aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }} | jq -r '.id')
+          json_output=$(aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }}
+          instanceid=$(echo "$json_output" | jq -r '.instanceid')
+          host=$(echo "$json_output" | jq -r '.connection_url')
+          username=$(echo "$json_output" | jq -r '.username')
+          password=$(echo "$json_output" | jq -r '.password')
           echo $instanceid
           echo "instanceid=$instanceid" >> $GITHUB_OUTPUT
+          echo "host=$host" >> $GITHUB_OUTPUT
+          echo "username=$username" >> $GITHUB_OUTPUT
+          echo "password=$password" >> $GITHUB_OUTPUT
 
       - name: Exists?
         run: aura instances get --instance-id ${{ steps.create.outputs.instanceid }}
@@ -52,7 +62,7 @@ jobs:
           done
 
   tests:
-    name: Tests
+    name: Integration Tests
     runs-on: ubuntu-latest
     needs: setup
     steps:
@@ -64,6 +74,9 @@ jobs:
       - name: Run Tests
         run: |
           echo "${{ needs.setup.outputs.instanceid }}"
+          echo "${{ needs.setup.outputs.host }}"
+          echo "${{ needs.setup.outputs.username }}"
+          echo "${{ needs.setup.outputs.password }}"
           echo "Running tests..."
           echo "Tests completed..."
 
