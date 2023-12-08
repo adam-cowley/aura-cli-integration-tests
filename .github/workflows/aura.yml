@@ -75,7 +75,7 @@ jobs:
         env:
           NEO4J_URI: ${{ needs.setup.outputs.host }}
           NEO4J_USERNAME: ${{ needs.setup.outputs.username }}
-          NEO4J_PASSWORD: needs.setup.outputs.password
+          NEO4J_PASSWORD: ${{ needs.setup.outputs.password }}
         run: |
           echo "NEO4J_URI=$NEO4J_URI"
           npm install --include=dev
