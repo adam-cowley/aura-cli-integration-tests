@@ -32,6 +32,7 @@ jobs:
         id: create
         run: >
           instanceid=$(aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }} | jq -r '.id')
+          echo $instanceid
           echo "instanceid=$instanceid" >> $GITHUB_OUTPUT
 
       - name: Exists?
