@@ -29,6 +29,9 @@ jobs:
       - name: Create Instance
         run: aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }}
 
+      - name: Exists?
+        run: aura instances get --name AuraIntegrationTests
+
       - name: Wait for instance
         run: >
           while true; do
