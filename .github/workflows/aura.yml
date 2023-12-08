@@ -30,7 +30,7 @@ jobs:
 
       - name: Create Instance
         id: create
-        run: >
+        run: |
           instanceid=$(aura instances create --name AuraIntegrationTests --cloud-provider ${{ secrets.AURA_CLOUD_PROVIDER }} --region ${{ secrets.AURA_REGION }} --type professional-db --tenant-id ${{ secrets.AURA_TENANT_ID }} | jq -r '.id')
           echo $instanceid
           echo "instanceid=$instanceid" >> $GITHUB_OUTPUT
@@ -39,7 +39,7 @@ jobs:
         run: aura instances get --instance-id ${{ steps.create.outputs.instanceid }}
 
       - name: Wait for instance
-        run: >
+        run: |
           while true; do
             dbstatus=$(aura instances get --instance-id ${{ steps.create.outputs.instanceid }} | jq -r '.status')
             if [ "$dbstatus" = "running" ]; then
@@ -52,7 +52,7 @@ jobs:
           done
 
       - name: Run Tests
-        run: >
+        run: |
           echo "Running tests..."
           echo "Tests completed..."
 
