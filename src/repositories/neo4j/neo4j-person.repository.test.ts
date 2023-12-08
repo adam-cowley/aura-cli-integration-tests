@@ -1,7 +1,7 @@
 import { config } from 'dotenv'
-import type { Driver } from 'neo4j-driver'
 import neo4j, { logging } from 'neo4j-driver'
 import { Neo4jPersonRepository } from './neo4j-person.repository'
+import type { Driver } from 'neo4j-driver'
 
 describe('Neo4jPersonRepository', () => {
     let driver: Driver
@@ -10,10 +10,10 @@ describe('Neo4jPersonRepository', () => {
         config()
 
         driver = neo4j.driver(
-            process.env.NEO4J_URI,
+            process.env.NEO4J_URI as string,
             neo4j.auth.basic(
-                process.env.NEO4J_USERNAME,
-                process.env.NEO4J_PASSWORD
+                process.env.NEO4J_USERNAME as string,
+                process.env.NEO4J_PASSWORD as string,
             )
         )
 
